@@ -7,7 +7,8 @@ use axum::{
 };
 
 use crate::{
-    handler::{
+    handler::post::{create_post_handler, update_post_handler},
+    handler::user::{
         get_me_handler, health_checker_handler, login_user_handler, logout_handler,
         register_user_handler,
     },
@@ -28,6 +29,16 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
         .route(
             "/api/users/me",
             get(get_me_handler)
+                .route_layer(middleware::from_fn_with_state(app_state.clone(), auth)),
+        )
+        .route(
+            "/api/posts",
+            post(create_post_handler)
+                .route_layer(middleware::from_fn_with_state(app_state.clone(), auth)),
+        )
+        .route(
+            "/api/posts/update",
+            post(update_post_handler)
                 .route_layer(middleware::from_fn_with_state(app_state.clone(), auth)),
         )
         .with_state(app_state)
