@@ -1,125 +1,140 @@
 {
-	"info": {
-		"_postman_id": "cefa74ab-2280-4d3b-8c1a-3e674c4e9f7b",
-		"name": "Rust HS256 JWT",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14791724"
-	},
-	"item": [
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"name\": \"Admin\",\r\n    \"password\": \"password123\",\r\n    \"passwordConfirm\": \"password123\",\r\n    \"photo\": \"default.png\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/api/auth/register",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/api/auth/logout",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"auth",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"password123\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/api/auth/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User",
-			"item": [
-				{
-					"name": "Get Me",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/api/users/me",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"users",
-								"me"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	]
+    "client": "Thunder Client",
+    "collectionName": "Rust HS256 JWT",
+    "dateExported": "2024-01-15T13:31:11.055Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "3f477fc4-2932-490b-9971-c89eb2a259fc",
+            "name": "Auth",
+            "containerId": "",
+            "created": "2024-01-14T20:35:44.068Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "f8603d19-cc23-4e26-bac0-807af6660e32",
+            "name": "User",
+            "containerId": "",
+            "created": "2024-01-14T20:35:44.069Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "0ad79807-a673-4c69-ba1c-d64b0a9f352e",
+            "name": "Post",
+            "containerId": "",
+            "created": "2024-01-15T12:43:48.802Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "04e81c2c-f99b-433c-b162-1f17cdf2a554",
+            "colId": "9b381fce-6a55-426a-82bd-dc4557324205",
+            "containerId": "3f477fc4-2932-490b-9971-c89eb2a259fc",
+            "name": "Register",
+            "url": "http://localhost:8000/api/auth/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-01-14T20:35:44.068Z",
+            "modified": "2024-01-15T12:43:13.803Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"email\": \"admin@admin.com\",\n    \"name\": \"Admin\",\n    \"password\": \"password123\",\n    \"passwordConfirm\": \"password123\",\n    \"photo\": \"default.png\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "f452e469-b72e-44cd-8ffb-5cc188b77340",
+            "colId": "9b381fce-6a55-426a-82bd-dc4557324205",
+            "containerId": "3f477fc4-2932-490b-9971-c89eb2a259fc",
+            "name": "Logout",
+            "url": "http://localhost:8000/api/auth/logout",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-01-14T20:35:44.069Z",
+            "modified": "2024-01-14T20:35:44.069Z",
+            "headers": []
+        },
+        {
+            "_id": "65563938-6342-491d-bde7-2538a206f1c4",
+            "colId": "9b381fce-6a55-426a-82bd-dc4557324205",
+            "containerId": "3f477fc4-2932-490b-9971-c89eb2a259fc",
+            "name": "Login",
+            "url": "http://localhost:8000/api/auth/login",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-01-14T20:35:44.070Z",
+            "modified": "2024-01-15T12:43:26.914Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"password123\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8dc40a62-8898-4b4b-9821-8e494e4d62ce",
+            "colId": "9b381fce-6a55-426a-82bd-dc4557324205",
+            "containerId": "f8603d19-cc23-4e26-bac0-807af6660e32",
+            "name": "Get Me",
+            "url": "http://localhost:8000/api/users/me",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-01-14T20:35:44.071Z",
+            "modified": "2024-01-14T20:35:44.071Z",
+            "headers": [],
+            "auth": {
+                "type": "none"
+            }
+        },
+        {
+            "_id": "eb6ec7bb-5149-4799-9125-8f48036c2acf",
+            "colId": "9b381fce-6a55-426a-82bd-dc4557324205",
+            "containerId": "0ad79807-a673-4c69-ba1c-d64b0a9f352e",
+            "name": "Create",
+            "url": "http://localhost:8000/api/posts",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-01-15T12:44:01.951Z",
+            "modified": "2024-01-15T12:52:46.873Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Post 1\",\n  \"content\": \"Hello hello\",\n  \"photo\": \"default.png\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "49384240-82f0-4d3f-9b43-62354f22e412",
+            "colId": "9b381fce-6a55-426a-82bd-dc4557324205",
+            "containerId": "0ad79807-a673-4c69-ba1c-d64b0a9f352e",
+            "name": "Get all",
+            "url": "http://localhost:8000/api/posts?page=1&per_page=50",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-01-15T13:27:49.250Z",
+            "modified": "2024-01-15T13:29:45.659Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "page",
+                    "value": "1",
+                    "isPath": false
+                },
+                {
+                    "name": "per_page",
+                    "value": "50",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        }
+    ]
 }

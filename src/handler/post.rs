@@ -1,19 +1,81 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::State,
+    extract::{Path, Query, State},
     http::{header, Response, StatusCode},
     response::IntoResponse,
     Extension, Json,
 };
 use serde_json::json;
+use uuid::Uuid;
 
 use crate::{
-    model::post::{CreatePostSchema, DeletePostSchema, Post, UpdatePostSchema},
-    model::user::User,
+    model::post::{
+        CreatePostSchema, DeletePostSchema, GetPostsPaginatedSchema, Post, UpdatePostSchema,
+    },
+    model::{post, user::User},
     response::FilteredUser,
     AppState,
 };
+
+pub async fn get_post_handler(
+    State(data): State<Arc<AppState>>,
+    Path(id): Path<Uuid>,
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    // get the post from the database and check if it exists and if the user is the owner
+    let post = Post::get_by_id(id, &data.db).await;
+
+    match post {
+        Ok(post) => Ok((StatusCode::OK, Json(post))),
+        Err(e) => {
+            eprintln!("Error getting post: {:?}", e);
+            Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "message": "Error getting post" })),
+            ))
+        }
+    }
+}
+
+pub async fn get_posts_handler(
+    State(data): State<Arc<AppState>>,
+    Query(query): Query<GetPostsPaginatedSchema>,
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    let page = match query.page {
+        Some(page) => page,
+        None => 1,
+    };
+
+    let per_page = match query.per_page {
+        Some(per_page) => per_page,
+        None => 10,
+    };
+
+    // Get the posts from the database
+    let posts = Post::find_all(&data.db, page, per_page).await;
+
+    // Check if the posts were found
+    match posts {
+        Ok(posts) => {
+            let posts: Vec<Post> = posts
+                .into_iter()
+                .map(|mut post| {
+                    post.user_id = uuid::Uuid::nil();
+                    post
+                })
+                .collect();
+
+            Ok((StatusCode::OK, Json(posts)))
+        }
+        Err(e) => {
+            eprintln!("Error getting posts: {:?}", e);
+            Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "message": "Error getting posts" })),
+            ))
+        }
+    }
+}
 
 pub async fn create_post_handler(
     Extension(user): Extension<User>,
@@ -28,10 +90,13 @@ pub async fn create_post_handler(
         ));
     }
 
+    let slug = create_slug(&body.title);
+
     // Access the request body using the `body` variable
     let post = Post {
         id: uuid::Uuid::new_v4(),
         title: body.title,
+        slug: Some(slug),
         content: body.content,
         photo: body.photo,
         user_id: user.id,
@@ -61,7 +126,8 @@ pub async fn update_post_handler(
     Json(body): Json<UpdatePostSchema>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     // check if body is valid
-    if body.title.is_empty() || body.content.is_empty() || body.photo.is_empty() {
+    if body.title.is_empty() || body.content.is_empty() || body.photo.is_empty() || body.id.is_nil()
+    {
         return Err((
             StatusCode::BAD_REQUEST,
             Json(json!({ "message": "Invalid body" })),
@@ -93,6 +159,7 @@ pub async fn update_post_handler(
     let post = Post {
         id: body.id,
         title: body.title,
+        slug: None,
         content: body.content,
         photo: body.photo,
         user_id: user.id,
@@ -116,15 +183,37 @@ pub async fn update_post_handler(
     }
 }
 
-fn filter_user_record(user: &User) -> FilteredUser {
-    FilteredUser {
-        id: user.id.to_string(),
-        email: user.email.to_owned(),
-        name: user.name.to_owned(),
-        photo: user.photo.to_owned(),
-        role: user.role.to_owned(),
-        verified: user.verified,
-        created_at: user.created_at.unwrap(),
-        updated_at: user.updated_at.unwrap(),
-    }
+pub fn create_slug(title: &str) -> String {
+    let slug = title
+        .to_lowercase()
+        .replace(" ", "-")
+        .replace("?", "")
+        .replace("!", "")
+        .replace(".", "")
+        .replace(",", "")
+        .replace(":", "")
+        .replace(";", "")
+        .replace("(", "")
+        .replace(")", "")
+        .replace("[", "")
+        .replace("]", "")
+        .replace("{", "")
+        .replace("}", "")
+        .replace("*", "")
+        .replace("&", "")
+        .replace("@", "")
+        .replace("#", "")
+        .replace("$", "")
+        .replace("%", "")
+        .replace("^", "")
+        .replace("+", "")
+        .replace("=", "")
+        .replace("`", "")
+        .replace("~", "")
+        .replace("<", "")
+        .replace(">", "")
+        .replace("/", "")
+        .replace("|", "");
+
+    slug
 }
